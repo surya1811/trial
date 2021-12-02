@@ -1,7 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route,Link } from 'react-router-dom';
 import Details from "./Details";
-
+import { Button } from '@material-ui/core';
+import { styled } from '@mui/material/styles';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Collapse from '@mui/material/Collapse';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import { red } from '@mui/material/colors';
+import Grid from '@material-ui/core/Grid'
 const HOW_ARE=
   `
   {
@@ -26,6 +38,9 @@ const HOW_ARE=
 }`
  export default function Githubs() 
  {
+  const [start, setStart] = useState(0);
+  const [end, setEnd] = useState(5);
+  
 const [repos,setRepos]=useState([]);
 const [toget,setToget]=useState([]);
 const [loaded, setLoaded] = useState(false);
@@ -39,13 +54,14 @@ const [loaded, setLoaded] = useState(false);
     {
       method: "POST",
       headers: { 
-        'Authorization': 'Bearer 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', 
+        'Authorization': 'Bearer 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', 
          'Content-Type': 'application/json'
       },
       body:JSON.stringify({query : HOW_ARE })
     }).then((response)=>response.json())
     .then((data) => {
       setRepos(data);
+      console.log(repos);
       //if else condition
       // setShowrepos(data.slice(0,5));
       setToget(data.data.user.repositories.nodes.map(itemx =>{
@@ -59,37 +75,59 @@ const [loaded, setLoaded] = useState(false);
       setLoaded(true);
     })
     
-  },[]);
+  },[start,end]);
  console.log(repos)
 
-//  function add5(){
-//    //if else condition
-//  start = start + 5;
-//    setShowrepos(repos.slice(start, start+5));
-//  }
+
 
 // same as previous which uses minus5
+function add10()
+{
+  var curr=start;
+  if(curr<repos.length)
+  {
+    setStart(curr+5);
+   setEnd(end+5)
+  }
+}
+  function sub10(){
+    if(start>0)
+    {
+      setStart(start-5);
+      setEnd(end-5);
+    }
+  }  
   
-  return (
-   <div>
 
-     <h1>how are you</h1>
-     
+  return (
+    <Grid container justifyContent="center" alignItems="center">
+    <Card sx={{ Width: 600 }}>
+    <CardHeader
+      avatar={
+        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+          S
+        </Avatar>
+      }
+      title="Welcome to Github"
+        subheader="My Repositories"
+      />
      <ul>
      {loaded && repos && repos.data.user.repositories.nodes.map(item =>(
       <div>
       
-      <li key={item.id}> {item.name}
-      <button> <a href={item.url} target="_blank" >click here</a></button>
+      <li key={item.id}> 
+      <CardContent>
+      <Typography gutterBottom variant="h5" component="div">
+         {item.name}
+        </Typography>
+      </CardContent>
+    
+      <Button color="secondary" variant="contained"> <a href={item.url} target="_blank" style={{color:"white"}}>URL Link</a></Button>
       
       
           
             
-          {/* <Link to='/details'
-          state= {{
-            message : 'hello',
-          }}
-          /> */}
+   
           <Link to={{
             pathname:'/details',
             state:{
@@ -99,9 +137,8 @@ const [loaded, setLoaded] = useState(false);
               desc: item.description
             }
           }}>
-              <button>
-             Details
-             </button>
+             <Button color="Success" variant="contained"> Details</Button>
+     
           </Link>
       
       
@@ -110,11 +147,13 @@ const [loaded, setLoaded] = useState(false);
      ))}
    
       </ul>
-     
+      <button onClick={sub10} className="foot">Previous</button>
+      <button onClick={add10} className="foot">Next</button>
+   
    
       
       
-        </div>
-   
+        </Card>
+        </Grid>
        );
  }

@@ -1,10 +1,11 @@
 import React, {Component,useLocation} from "react";
-import { Link } from "react-router-dom";
+
 import { useState } from "react";
-import { render } from "@testing-library/react";
 
 
-const Details = (props) =>  {
+
+const Details = (props) =>
+  {
 const [tobedone,setTobedone]=useState(false);
   const [newname,setNewname]=useState('');
   const [newdesc,setNewdesc]=useState('');
